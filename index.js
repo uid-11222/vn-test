@@ -20,6 +20,10 @@ const fps = 60;
 const videoType = `video/mp4`;
 const videoSelector = `MediaFiles [type="${videoType}"]`;
 
+window.addEventListener(`load`, () => {
+  run(optionsUrl);
+});
+
 /**
  * Run all async work.
  */
@@ -51,6 +55,9 @@ const run = async (optionsUrl) => {
       };
       xhr.send();
     });
+    /**
+     * @todo Fix crossOrigin request.
+     */
     //videoUrl = dataXml.querySelector(videoSelector).textContent;
     videoUrl = `./test.mp4`;
     localStorage.vnOptions = vnOptions =
@@ -60,9 +67,9 @@ const run = async (optionsUrl) => {
   /**
    * Get container.
    */
-  const container = document.querySelector(`.${vnClass}`);
-  let rectangle = container.getBoundingClientRect();
-  const width = Math.floor(rectangle.right - rectangle.left);
+  const container = document.querySelector(`.${vnClass}`),
+        rectangle = container.getBoundingClientRect(),
+        width = Math.floor(rectangle.right - rectangle.left);
 
   /**
    * Add image.
@@ -77,13 +84,7 @@ const run = async (optionsUrl) => {
     img.addEventListener(`load`, () => res());
     img.addEventListener(`error`, () => rej());
   });
-  /**
-   * @todo In some keys img.clientHeight = 0.
-   */
-  container.offsetHeight;
-  rectangle = container.getBoundingClientRect();
-  const rectangleHeight = Math.floor(rectangle.bottom - rectangle.top);
-  const height = Math.max(img.clientHeight, rectangleHeight) || 220;
+  const height = img.clientHeight || 220;
 
   /**
    * Add video.
@@ -174,7 +175,5 @@ const changePixelColors = (video, colorMap, fps = 60) => {
    */
   setFrame();
 };
-
-run(optionsUrl);
 
 }
