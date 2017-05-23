@@ -5,34 +5,6 @@
   "main": "index.html",
   "scripts": {
     "test": "mocha ./test/test.js",
-    "push": "git push"
-  },
-  "keywords": [
-    "test",
-    "videonow"
-  ],
-  "dependencies": {
-    {
-  "name": "vn-test",
-  "version": "0.1.0",
-  "description": "Test work for videonow.",
-  "main": "index.html",
-  "scripts": {
-    "test": "mocha ./test/test.js",
-    "push": "git push"
-  },
-  "keywords": [
-    "test",
-    "videonow"
-  ],
-  "dependencies": {
-    {
-  "name": "vn-test",
-  "version": "0.1.0",
-  "description": "Test work for videonow.",
-  "main": "index.html",
-  "scripts": {
-    "test": "mocha ./test/test.js",
     "push": "git push",
     "start": "node server.js"
   },

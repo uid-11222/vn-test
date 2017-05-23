@@ -4,6 +4,20 @@
 
 Test work for videonow.
 
+## Usage
+```bash
+$ cd vn-test
+$ npm install
+$ npm start
+```
+Open http://localhost:3000 .
+
+Run
+```js
+localStorage.vnOptions = ``;
+```
+in console to clear local cached links.
+
 ## License
 [MIT](LICENSE)
 
