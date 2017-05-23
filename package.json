@@ -1,10 +1,10 @@
 {
   "name": "vn-test",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Test work for videonow.",
   "main": "index.html",
   "scripts": {
-    "test": "mocha ./test/test.js",
+    "test": "opener ./test/test.html",
     "push": "git push",
     "start": "node server.js"
   },
@@ -15,7 +15,10 @@
   "dependencies": {
     "express": "^4.15.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "^3.4.1",
+    "opener": "^1.4.3"
+  },
   "author": "uid-11222",
   "homepage": "https://github.com/uid-11222/vn-test",
   "repository": {

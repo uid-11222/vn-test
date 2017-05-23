@@ -15,7 +15,7 @@ const disappearDuration = 3;
 /**
  * Frames per second (for invert video).
  */
-const fps = 60;
+const fps = 25;
 
 const videoType = `video/mp4`;
 const videoSelector = `MediaFiles [type="${videoType}"]`;
@@ -69,7 +69,7 @@ const run = async (optionsUrl) => {
    */
   const container = document.querySelector(`.${vnClass}`),
         rectangle = container.getBoundingClientRect(),
-        width = Math.floor(rectangle.right - rectangle.left);
+        width = Math.floor(rectangle.width);
 
   /**
    * Add image.
@@ -81,8 +81,8 @@ const run = async (optionsUrl) => {
   container.classList.add(imgReadyClass);
   container.appendChild(img);
   await new Promise((res, rej) => {
-    img.addEventListener(`load`, () => res());
-    img.addEventListener(`error`, () => rej());
+    img.addEventListener(`load`, res);
+    img.addEventListener(`error`, rej);
   });
   const height = img.clientHeight || 220;
 
@@ -129,8 +129,8 @@ const invertColors = (r, g, b, a) => [
 const changePixelColors = (video, colorMap, fps = 60) => {
 
   const rectangle = video.getBoundingClientRect();
-  const width = Math.floor(rectangle.right - rectangle.left),
-        height = Math.floor(rectangle.bottom - rectangle.top);
+  const width = Math.floor(rectangle.width),
+        height = Math.floor(rectangle.height);
 
   const inputCanvas = document.createElement(`canvas`),
         outputCanvas = document.createElement(`canvas`);
@@ -142,7 +142,7 @@ const changePixelColors = (video, colorMap, fps = 60) => {
         outputContex = outputCanvas.getContext(`2d`);
 
   video.style.display = inputCanvas.style.display = `none`;
-  video.crossOrigin = ``;
+  video.crossOrigin = `anonymous`;
   video.parentNode.insertBefore(outputCanvas, video);
   video.parentNode.insertBefore(inputCanvas, video);
 
