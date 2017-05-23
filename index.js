@@ -10,9 +10,15 @@ const vnClass = `vn`,
 /**
  * Image disappeare duration in seconds.
  */
-const disappearDuration = 1;
+const disappearDuration = 3;
 
-const videoSelector = `MediaFiles [type="video/mp4"]`;
+/**
+ * Frames per second (for invert video).
+ */
+const fps = 60;
+
+const videoType = `video/mp4`;
+const videoSelector = `MediaFiles [type="${videoType}"]`;
 
 /**
  * Run all async work.
@@ -54,7 +60,7 @@ const run = async (optionsUrl) => {
    * Get container.
    */
   const container = document.querySelector(`.${vnClass}`);
-  let rectangle = container.getBoundingClientRect();
+  const rectangle = container.getBoundingClientRect();
   const width = Math.floor(rectangle.right - rectangle.left);
 
   /**
@@ -66,18 +72,21 @@ const run = async (optionsUrl) => {
   img.style.transition = `opacity ${disappearDuration}s`;
   container.classList.add(imgReadyClass);
   container.appendChild(img);
-  rectangle = container.getBoundingClientRect();
-  const height = Math.floor(rectangle.bottom - rectangle.top);
+  const height = img.clientHeight;
 
   /**
    * Add video.
    */
   const video = document.createElement(`video`);
-  video.setAttribute(`preload`, `auto`);
+  video.preload = `auto`;
   video.width = width;
   video.height = height;
   const canplayCallback = () => {
     container.classList.add(videoReadyClass, videoAnimatedClass);
+    /**
+     * Add inverting.
+     */
+    // changePixelColors(video, invertColors, fps);
     setTimeout(() => {
       video.removeEventListener(`canplay`, canplayCallback);
       video.play();
@@ -85,8 +94,75 @@ const run = async (optionsUrl) => {
     }, disappearDuration * 1000);
   };
   video.addEventListener(`canplay`, canplayCallback);
-  video.src = videoUrl;
+  const source = document.createElement(`source`);
+  source.src = videoUrl;
+  source.type = videoType;
+  video.appendChild(source);
   container.appendChild(video);
+
+};
+
+/**
+ * @return {number[4]}
+ */
+const invertColors = (r, g, b, a) => [
+  255 - r, 255 - g, 255 - b, a
+];
+
+/**
+ * @param {!HTMLVideoElement} video - video element for changing colors.
+ * @param {function(r, g, b, a): number[4]} colorMap - function for changing
+ *   colors.
+ * @param {number} [fps=60] - frame frequency.
+ */
+const changePixelColors = (video, colorMap, fps = 60) => {
+
+  const rectangle = video.getBoundingClientRect();
+  const width = Math.floor(rectangle.right - rectangle.left),
+        height = Math.floor(rectangle.bottom - rectangle.top);
+
+  const inputCanvas = document.createElement(`canvas`),
+        outputCanvas = document.createElement(`canvas`);
+
+  inputCanvas.width = outputCanvas.width = width;
+  inputCanvas.height = outputCanvas.height = height;
+
+  const inputContex = inputCanvas.getContext(`2d`),
+        outputContex = outputCanvas.getContext(`2d`);
+
+  video.style.display = inputCanvas.style.display = `none`;
+  video.crossOrigin = ``;
+  video.parentNode.insertBefore(outputCanvas, video);
+  video.parentNode.insertBefore(inputCanvas, video);
+
+  setInterval(() => {
+    if (video.paused || video.ended) {
+      return;
+    }
+    setFrame();
+  }, Math.round(1000 / fps));
+
+  /**
+   * Set one changed frame from video to output canvas.
+   */
+  const setFrame = () => {
+    inputContex.drawImage(video, 0, 0, width, height);
+    const frame = inputContex.getImageData(0, 0, width, height),
+          data = frame.data,
+          len = data.length;
+
+    for (let i = 0; i < len; i += 4) {
+      [data[i], data[i + 1], data[i + 2], data[i + 3]] =
+        colorMap(data[i], data[i + 1], data[i + 2], data[i + 3]);
+    }
+
+    outputContex.putImageData(frame, 0, 0);
+  };
+
+  /**
+   * If video paused, set first frame anyway.
+   */
+  setFrame();
 };
 
 run(optionsUrl);

@@ -2,6 +2,11 @@
   font-family: Verdana;
   margin: 80px 35%;
   position: relative;
+  text-align: center;
+}
+
+.vn__nojs {
+  padding: 30px;
 }
 
 .vn_img-ready .vn__nojs {
@@ -23,7 +28,7 @@
   display: block;
 }
 
-.vn video {
+.vn video, .vn canvas {
   position: absolute;
   top: 0;
   left: 0;
