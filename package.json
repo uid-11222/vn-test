@@ -11,10 +11,39 @@
     "test",
     "videonow"
   ],
-  "dependencies": {},
-  "devDependencies": {
-    "mocha": "^3.4.1"
+  "dependencies": {
+    {
+  "name": "vn-test",
+  "version": "0.1.0",
+  "description": "Test work for videonow.",
+  "main": "index.html",
+  "scripts": {
+    "test": "mocha ./test/test.js",
+    "push": "git push"
   },
+  "keywords": [
+    "test",
+    "videonow"
+  ],
+  "dependencies": {
+    {
+  "name": "vn-test",
+  "version": "0.1.0",
+  "description": "Test work for videonow.",
+  "main": "index.html",
+  "scripts": {
+    "test": "mocha ./test/test.js",
+    "push": "git push",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "test",
+    "videonow"
+  ],
+  "dependencies": {
+    "express": "^4.15.3"
+  },
+  "devDependencies": {},
   "author": "uid-11222",
   "homepage": "https://github.com/uid-11222/vn-test",
   "repository": {

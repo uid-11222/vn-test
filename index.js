@@ -51,7 +51,8 @@ const run = async (optionsUrl) => {
       };
       xhr.send();
     });
-    videoUrl = dataXml.querySelector(videoSelector).textContent;
+    //videoUrl = dataXml.querySelector(videoSelector).textContent;
+    videoUrl = `./test.mp4`;
     localStorage.vnOptions = vnOptions =
       JSON.stringify({ dataUrl, previewImage, videoUrl });
   }
@@ -60,7 +61,7 @@ const run = async (optionsUrl) => {
    * Get container.
    */
   const container = document.querySelector(`.${vnClass}`);
-  const rectangle = container.getBoundingClientRect();
+  let rectangle = container.getBoundingClientRect();
   const width = Math.floor(rectangle.right - rectangle.left);
 
   /**
@@ -72,7 +73,17 @@ const run = async (optionsUrl) => {
   img.style.transition = `opacity ${disappearDuration}s`;
   container.classList.add(imgReadyClass);
   container.appendChild(img);
-  const height = img.clientHeight;
+  await new Promise((res, rej) => {
+    img.addEventListener(`load`, () => res());
+    img.addEventListener(`error`, () => rej());
+  });
+  /**
+   * @todo In some keys img.clientHeight = 0.
+   */
+  container.offsetHeight;
+  rectangle = container.getBoundingClientRect();
+  const rectangleHeight = Math.floor(rectangle.bottom - rectangle.top);
+  const height = Math.max(img.clientHeight, rectangleHeight) || 220;
 
   /**
    * Add video.
@@ -86,7 +97,7 @@ const run = async (optionsUrl) => {
     /**
      * Add inverting.
      */
-    // changePixelColors(video, invertColors, fps);
+    changePixelColors(video, invertColors, fps);
     setTimeout(() => {
       video.removeEventListener(`canplay`, canplayCallback);
       video.play();
@@ -99,7 +110,6 @@ const run = async (optionsUrl) => {
   source.type = videoType;
   video.appendChild(source);
   container.appendChild(video);
-
 };
 
 /**
