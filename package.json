@@ -4,7 +4,7 @@
   "description": "Test work for videonow.",
   "main": "index.html",
   "scripts": {
-    "test": "opener ./test/test.html",
+    "test": "opener 'http://localhost:3000/test/test.html'",
     "push": "git push",
     "start": "node server.js"
   },

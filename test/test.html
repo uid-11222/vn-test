@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><title>Mocha tests</title>
+<link href="../node_modules/mocha/mocha.css" rel="stylesheet">
+<script src="../node_modules/mocha/mocha.js"></script>
+<div id="mocha"></div>
+<script>
+ mocha.setup('bdd');
+</script>
+<iframe src="http://localhost:3000/" style="visibility: hidden;
+  position: absolute;" width="800" height="400"></iframe>
+<script src="./test.js"></script>
+<script>
+  mocha.run();
+</script>

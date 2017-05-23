@@ -18,6 +18,12 @@ localStorage.vnOptions = ``;
 ```
 in console to clear local cached links.
 
+## Tests
+```bash
+$ npm start
+$ npm test
+```
+
 ## License
 [MIT](LICENSE)
 
