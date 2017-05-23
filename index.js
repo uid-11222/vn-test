@@ -1,12 +1,16 @@
 'use strict'; {
 
-
 const optionsUrl = `http://api.viqeo.tv/v1/data/init` +
   `?video[]=1853477d5dcac86d1260&profile=12`;
 
 const vnClass = `vn`,
-      imgClass = `vn__img`,
-      imgReadyClass = `vn_img-ready`;
+      imgReadyClass = `vn_img-ready`,
+      videoReadyClass = `vn_video-ready`,
+      videoAnimatedClass = `vn_animated`;
+/**
+ * Image disappeare duration in seconds.
+ */
+const disappearDuration = 1;
 
 const videoSelector = `MediaFiles [type="video/mp4"]`;
 
@@ -18,6 +22,9 @@ const run = async (optionsUrl) => {
   let dataUrl, previewImage, videoUrl;
   let vnOptions = localStorage.vnOptions;
 
+  /**
+   * Load urls.
+   */
   if (vnOptions) {
     ({ dataUrl, previewImage, videoUrl } = JSON.parse(vnOptions));
   } else {
@@ -39,27 +46,47 @@ const run = async (optionsUrl) => {
       xhr.send();
     });
     videoUrl = dataXml.querySelector(videoSelector).textContent;
-
     localStorage.vnOptions = vnOptions =
       JSON.stringify({ dataUrl, previewImage, videoUrl });
   }
 
+  /**
+   * Get container.
+   */
   const container = document.querySelector(`.${vnClass}`);
   let rectangle = container.getBoundingClientRect();
-  const width = Math.round(rectangle.right - rectangle.left);
+  const width = Math.floor(rectangle.right - rectangle.left);
 
+  /**
+   * Add image.
+   */
   const img = new Image;
   img.src = previewImage;
-  img.className = imgClass;
-  img.style.width = `${width}px`;
-
+  img.width = width;
+  img.style.transition = `opacity ${disappearDuration}s`;
   container.classList.add(imgReadyClass);
   container.appendChild(img);
   rectangle = container.getBoundingClientRect();
-  const height = Math.round(rectangle.bottom - rectangle.top);
+  const height = Math.floor(rectangle.bottom - rectangle.top);
 
-  console.log(width, height);
-
+  /**
+   * Add video.
+   */
+  const video = document.createElement(`video`);
+  video.setAttribute(`preload`, `auto`);
+  video.width = width;
+  video.height = height;
+  const canplayCallback = () => {
+    container.classList.add(videoReadyClass, videoAnimatedClass);
+    setTimeout(() => {
+      video.removeEventListener(`canplay`, canplayCallback);
+      video.play();
+      container.classList.remove(videoAnimatedClass);
+    }, disappearDuration * 1000);
+  };
+  video.addEventListener(`canplay`, canplayCallback);
+  video.src = videoUrl;
+  container.appendChild(video);
 };
 
 run(optionsUrl);

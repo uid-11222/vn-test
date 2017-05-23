@@ -1,8 +1,30 @@
 .vn {
   font-family: Verdana;
   margin: 80px 35%;
+  position: relative;
 }
 
 .vn_img-ready .vn__nojs {
   display: none;
+}
+
+.vn img {
+  z-index: 1;
+  position: relative;
+  display: block;
+}
+
+.vn_video-ready img {
+  opacity: 0;
+  display: none;
+}
+
+.vn_video-ready.vn_animated img {
+  display: block;
+}
+
+.vn video {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
